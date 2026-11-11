@@ -1,0 +1,16 @@
+# Configuracion de Cloudflare Workers (funciones serverless) + D1 (base de datos serverless)
+name = "pokedex-serverless"
+main = "src/worker.js"
+compatibility_date = "2025-09-01"
+
+# Archivos estaticos de la web (HTML, CSS, JS). Solo las rutas /api/* ejecutan el Worker.
+[assets]
+directory = "./public"
+run_worker_first = ["/api/*"]
+
+# Base de datos D1. "DB" es el nombre con el que el Worker accede a ella (env.DB).
+# Despues de ejecutar "npx wrangler d1 create pokedex-db", pega aqui el database_id que te muestra.
+[[d1_databases]]
+binding = "DB"
+database_name = "pokedex-db"
+database_id = "8466f581-484f-4b73-9657-1bfa9b1d68c7"

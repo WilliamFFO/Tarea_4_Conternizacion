@@ -1,0 +1,17 @@
+{
+  "name": "pokedex-serverless",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplicacion web serverless (Cloudflare Workers + D1) para la Actividad Sumativa de la Unidad 4",
+  "type": "module",
+  "scripts": {
+    "seed:generate": "node scripts/csv_to_sql.mjs",
+    "db:local": "wrangler d1 execute pokedex-db --local --file=db/schema.sql && wrangler d1 execute pokedex-db --local --file=db/seed.sql",
+    "dev": "wrangler dev",
+    "db:remote": "wrangler d1 execute pokedex-db --remote --file=db/schema.sql && wrangler d1 execute pokedex-db --remote --file=db/seed.sql",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

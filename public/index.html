@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pokédex Serverless</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <a class="skip" href="#explorar">Saltar a la búsqueda</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Principal">
+      <div class="nav-in">
+        <a class="brand" href="#top">Pokédex Serverless</a>
+        <ul class="nav-links">
+          <li><a href="#resumen">Resumen</a></li>
+          <li><a href="#grafica">Estadísticas</a></li>
+          <li><a href="#explorar">Explorar</a></li>
+        </ul>
+        <span class="nav-tag">Cloudflare Workers + D1</span>
+      </div>
+    </nav>
+
+    <div class="hero" id="top">
+      <div class="hero-in">
+        <h1>Pokédex <span>Serverless</span></h1>
+        <p>Datos del dataset <em>Pokemon with stats</em> (800 registros) guardados en <strong>Cloudflare D1</strong> y consultados con <strong>Cloudflare Workers</strong>.</p>
+        <a class="btn-light" href="#explorar">Explorar Pokémon</a>
+      </div>
+      <div class="globe" aria-hidden="true"></div>
+      <i class="dot orb" aria-hidden="true"></i>
+      <i class="dot cyan" aria-hidden="true"></i>
+      <i class="dot pink" aria-hidden="true"></i>
+    </div>
+  </header>
+
+  <main class="wrap" id="contenido">
+    <h2 class="sr-only">Resumen del dataset</h2>
+    <section class="tiles" aria-label="Resumen del dataset" id="resumen">
+      <div class="widget tile"><div class="w-bar"><h3>Pokémon</h3></div><div class="w-body"><span class="n" id="t-total">…</span></div></div>
+      <div class="widget tile"><div class="w-bar"><h3>Tipos</h3></div><div class="w-body"><span class="n" id="t-tipos">…</span></div></div>
+      <div class="widget tile"><div class="w-bar"><h3>Legendarios</h3></div><div class="w-body"><span class="n" id="t-leg">…</span></div></div>
+      <div class="widget tile"><div class="w-bar"><h3>Promedio de puntos totales</h3></div><div class="w-body"><span class="n" id="t-prom">…</span></div></div>
+    </section>
+
+    <section class="widget" id="grafica">
+      <div class="w-bar"><h2>Promedio de puntos totales por tipo principal</h2></div>
+      <div class="w-body">
+        <div id="chart" class="chart" role="img" aria-label="Gráfica de barras con el promedio de puntos totales por tipo"></div>
+      </div>
+    </section>
+
+    <section class="widget" id="explorar">
+      <div class="w-bar"><h2>Buscar Pokémon</h2></div>
+      <div class="w-body mint">
+        <form id="form" class="filters" autocomplete="off">
+          <label class="grow">Buscar por ID (1–800) o por nombre
+            <input id="q" type="search" placeholder="Ej: 25 o Pikachu" maxlength="60">
+          </label>
+          <label>Tipo
+            <select id="type"><option value="">Todos</option></select>
+          </label>
+          <label>Generación
+            <select id="gen">
+              <option value="">Todas</option>
+              <option>1</option><option>2</option><option>3</option>
+              <option>4</option><option>5</option><option>6</option>
+            </select>
+          </label>
+          <label class="check"><input id="legendary" type="checkbox"> Solo legendarios</label>
+          <button type="button" id="clear" class="ghost">Limpiar</button>
+        </form>
+        <p class="hint">El ID es el número de fila de la base de datos (1–800). El número de la Pokédex original se repite en las mega-evoluciones, por eso no se usa para buscar.</p>
+      </div>
+
+      <div class="w-body">
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <div id="cards" class="cards"></div>
+
+        <nav class="pager" aria-label="Paginación">
+          <button id="prev" type="button">&larr; Anterior</button>
+          <span id="pageinfo"></span>
+          <button id="next" type="button">Siguiente &rarr;</button>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="detail" aria-labelledby="d-title">
+    <div class="d-head">
+      <h2 id="d-title"></h2>
+      <button id="d-close" type="button" class="ghost" aria-label="Cerrar">&times;</button>
+    </div>
+    <div id="d-body"></div>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="foot-cols">
+        <div>
+          <h2>Navegación</h2>
+          <ul>
+            <li><a href="#top">Inicio</a></li>
+            <li><a href="#resumen">Resumen</a></li>
+            <li><a href="#grafica">Estadísticas</a></li>
+            <li><a href="#explorar">Explorar</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Tecnología</h2>
+          <ul>
+            <li><a href="https://developers.cloudflare.com/workers/" target="_blank" rel="noopener">Cloudflare Workers</a></li>
+            <li><a href="https://developers.cloudflare.com/d1/" target="_blank" rel="noopener">Cloudflare D1</a></li>
+            <li>Sitio estático + API en el borde</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Proyecto</h2>
+          <ul>
+            <li>Dataset: Pokemon with stats</li>
+            <li>800 registros · 13 columnas</li>
+            <li>Patrón serverless (FaaS + BaaS)</li>
+          </ul>
+        </div>
+      </div>
+      <p class="foot-note">Aplicación serverless: sitio estático + función en el borde + base de datos serverless. Imágenes: <a href="https://pokemondb.net/sprites" target="_blank" rel="noopener">pokemondb.net</a>. Pokémon es marca de Nintendo, Game Freak y Creatures Inc.; uso educativo.</p>
+    </div>
+  </footer>
+  <script src="/app.js"></script>
+</body>
+</html>
